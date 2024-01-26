@@ -1,0 +1,224 @@
+{% extends 'chat/base.html' %}
+
+{% load static %}
+
+{% block title %}Chat App{% endblock %}
+{% block link %} <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> {% endblock %}
+
+{% block body %}
+    <div id="container">
+        <aside>
+            
+            <div class="new-chat-wrapper"><a href="/chat/new-chat" class="new-chat" style="background-image: url({% static "/images/plus.svg" %});"></a></div>
+            <header>
+                <input id="logged-in-user" type="hidden" value="{{user.id}}">
+                <input id="other-user" type="hidden" value="{% if activeConversation.other_user == user %}{{activeConversation.first_user.id}}{% else %}{{activeConversation.other_user.id}}{% endif %}">
+                <input id="other-user-name" type="hidden" value="{% if activeConversation.other_user == user %}{{activeConversation.first_user.username}}{% else %}{{activeConversation.other_user.username}}{% endif %}">
+                <h3 class="server-time" style="display: none;">{{ server_timestamp|date:"Y-m-d H:i:s" }}</h3>
+                <div class="inline-flex">
+                    <div class="flex flex-wrap">
+                    <a href="/profile" class="mr-3">
+                        <button type="button" style="background-color: #5e616a;" class="p-2 text-white rounded-lg text-sm font-semibold text-gray-900 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            My Profile
+                        </button>
+                    </a>
+                    <a href="/logout">
+                        <button type="button" style="background-color: #5e616a;" class="p-2 text-white rounded-lg text-sm font-semibold text-gray-900 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            Logout
+                        </button>
+                    </a>
+                    </div>
+                </div>
+            </header>
+            <ul id="conversationList">
+                <li>
+                    <a href="/chat/{{botConv.id}}">
+                        <img src="{% static '/images/ai.png' %}" alt="">
+                        <div>
+                            <h2>ChatBot</h2>
+                            <h3>Chat With an AI Chatbot.</h3>
+                        </div>
+                    </a>
+                </li>
+                {% for conversation in conversations %}
+                    {% if conversation != botConv %}
+                    <li>
+                    <a href="/chat/{{conversation.id}}">
+                            {% if user != conversation.first_user %}
+                                {% if conversation.first_user.profile.image_url != '' %}
+                                    <img src="{{ conversation.first_user.profile.image_url }}" alt="Not found">
+                                {% else %}
+                                    <img src="{% static '/images/user-light.png' %}" alt="not found">
+                                {% endif %}
+                            {% else %}
+                                {% if conversation.other_user.profile.image_url != '' %}
+                                    <img src="{{ conversation.other_user.profile.image_url }}" alt="Not found">
+                                {% else %}
+                                    <img src="{% static '/images/user-light.png' %}" alt="not found">
+                                {% endif %}
+                            {% endif %}
+                        <div>
+                            {% if user != conversation.first_user %}
+                                <h2>{{conversation.first_user}}</h2>
+                            {% else %}
+                                <h2>{{conversation.other_user}}</h2>
+                            {% endif %}
+                                <h3>
+                                    <span class="orange">&#8226</span>
+                                    @{{conversation.modified_at}}
+                                </h3>
+                        </div>
+                    </a>
+                        </li>
+                    {% endif %}
+                {% empty %}
+                    <li>
+                        <div>
+                            <h2>No Messages</h2>
+                            <h3>Your Messages Will Appear Here!</h3>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+        <main style="background-image: url({% static 'images/bg-img1.jpg' %});">
+            <header>
+                <div class="back" onclick="goBack()" style="background-image: url( {% static '/images/back.svg' %} );"></div>
+                {% if activeConversation == botConv %}
+                    <img src="{% static '/images/ai.png' %}" alt="">
+                {% elif otherProfile.image_url != None %}
+                        <img src="{{ otherProfile.image_url }}" alt="">
+                {% else %}
+                        <img src="{% static '/images/user-light.png' %}" alt="">
+                {% endif %}
+                <h2>
+                    {% if user != activeConversation.first_user %}
+                    {{activeConversation.first_user}}
+                    {% else %}
+                    {{activeConversation.other_user}}
+                    {% endif %}
+                </h2>
+                <input id="conversation-id" type="hidden" value="{{activeConversation.id}}">
+            </header>
+            <ul id="chat" style="background-image: url({% static 'images/bg-img1.jpg' %});">
+                {% for message in activeConversation.messages.all %}
+                    {% if "Image Selected:" in message.content %}
+                    <li class="{% if message.created_by == user %} me {% else %} you {% endif %}">
+                        <h3 class="time">{{message.created_at}}</h3>
+                        {% with parts=message.content|slice:"16:" %}
+                        <div class="message photo">
+                            <img src="{% static '../media/uploaded_images' %}/{{parts}}" alt="">
+                        </div>
+                        {% endwith %}
+                    </li>
+                    {% else %}
+                        {% if message.created_by == user %}
+                            <li class="me">
+                                <h3 class="time">{{message.created_at}}</h3>
+                                <button onclick="translateMessage(this, true)" class="tBtn transition-opacity opacity-0 content-T text-center rounded-full border-2 border-26CAAD me-2 px-2 h-25 w-25 bg-opacity-40 bg-gray-700" style="color: #26CAAD;">
+                                    T
+                                </button>
+                                <div class="message">
+                                    {{message.content}}
+                                </div>
+                                {% comment %} <button id="tButton" onclick="translateMessage('{{ message.content }}')">T</button> {% endcomment %}
+                                {% comment %} <button class="text-white border-0 ms-2 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-sm" style="background-color: #26CAAD;" onclick="translateMessage('{{ message.content }}')">T</button> {% endcomment %}
+                            </li>
+
+                        {% else %}
+                            <li class="you">
+                                <h3 class="time">{{message.created_at}}</h3>
+                            <div class="message reply">
+                                {{message.content}}
+                            </div>
+                            {% comment %} <button id="tButton" onclick="translateMessage('{{ message.content }}')">T</button> {% endcomment %}
+                            <button onclick="translateMessage(this, false)" class="tBtn transition-opacity opacity-0 content-T text-center rounded-full border-2 border-26CAAD ms-2 px-2 h-25 w-25 bg-opacity-40 bg-gray-700" style="color: #26CAAD;">
+                                T
+                            </button>
+                            {% comment %} <button class="text-white border-0 ms-2 py-1 px-2 focus:outline-none hover:bg-indigo-600 rounded text-sm" style="background-color: #26CAAD;" onclick="translateMessage('{{ message.content }}')">T</button> {% endcomment %}
+                          </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <footer>
+                <form id="message-form" action="">
+                    <!-- <input type="file" name="uploaded-image" id="uploaded-image" style="display: none;"> -->
+                    <!-- <input type="image" name="uploaded-image" id="uploaded-image" placeholder="Attach Image"> -->
+                    <input type="text" name="messageInput" id="messageInput" placeholder="Type your message">
+                    <a href="/chat/crop-image/{{activeConversation.id}}"><img class="image-icon" src="{% static '/images/image.svg' %}" alt=""></a>
+                    <button id="sendBtn"><img src="{% static '/images/send.svg' %}" alt=""></button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <script src="{% static 'js/messages.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        let replies = document.querySelectorAll('.reply');
+        replies.forEach(reply => {
+            reply.innerHTML = marked.parse(reply.innerHTML.trimStart());
+        });
+    </script>
+    <script>
+        const chatContainer = document.getElementById('chat');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        document.querySelector('.image-icon').addEventListener('click', function() {
+        document.getElementById('uploaded-image').click();
+        });
+
+        const shrink=()=>{
+            var aside=document.querySelector("aside");
+            if(aside.offsetWidth==window.innerWidth)
+            aside.style.marginLeft = '-100%';
+        }
+        const goBack=()=>{
+            var aside=document.querySelector("aside");
+            aside.style.marginLeft = '0%';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            shrink();    
+        });
+
+        // Message Translation:
+        async function translateMessage(button, me) {
+            if (me){
+                var messageDiv = button.nextElementSibling;
+            }
+            else {
+                var messageDiv = button.previousElementSibling;
+            }
+            if (messageDiv && messageDiv.classList.contains('message')) {
+                var messageContent = messageDiv.textContent;
+        }
+            // console.log('Clicked button with message content:', messageContent);
+
+        try {
+            // Making Request to the Django Function (Local API)
+            const response = await fetch('/chat/translate-message/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ messageContent }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Translation failed');
+            }
+
+            const translatedMessage = await response.json();
+
+            messageDiv.textContent = translatedMessage.translatedMessage;
+
+        } catch (error) {
+            console.error('Error translating message:', error.message);
+        }
+    }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    {% block link %} {% endblock %}
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body style="background-color: #abd9e9; background-image: url({% static 'images/bg-img5.png' %});">
+
+    {% if message %}
+    <h1>{{ message }}</h1>
+    {% endif %}
+    
+    {% block body %}
+    {% endblock %}
+
+</body>
+
+</html>

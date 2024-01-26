@@ -1,0 +1,104 @@
+{% extends 'chat/base.html' %}
+
+{% load static %}
+
+{% block title %}Chat App{% endblock %}
+{% block link %} <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> {% endblock %}
+
+{% block body %}
+    <div id="container">
+        <aside>
+            
+            <div class="new-chat-wrapper"><a href="/chat/new-chat" class="new-chat" style="background-image: url({% static "/images/plus.svg" %});"></a></div>
+            <header>
+                <input id="logged-in-user" type="hidden" value="{{user.id}}">
+                <input id="other-user" type="hidden" value="{% if activeConversation.other_user == user %}{{activeConversation.first_user.id}}{% else %}{{activeConversation.other_user.id}}{% endif %}">
+                <h3 class="server-time" style="display: none;">{{ server_timestamp|date:"Y-m-d H:i:s" }}</h3>
+
+                <div class="inline-flex">
+                    <div class="inline-flex">
+                    <a href="/profile" class="me-3">
+                        <button type="button" style="background-color: #5e616a;" class="p-2 text-white rounded-lg text-sm font-semibold text-gray-900 hover:bg-gray-50" id="menu-button" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            My Profile
+                        </button>
+                    </a>
+                    <a href="/logout">
+                        <button type="button" style="background-color: #5e616a;" class="p-2 text-white rounded-lg text-sm font-semibold text-gray-900 hover:bg-gray-50" id="menu-button" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                            Logout
+                        </button>
+                    </a>
+                    </div>
+                </div>
+
+            </header>
+            <ul id="conversationList">
+
+                <li>
+                    <a href="/chat/{{botConv.id}}">
+                        <img src="{% static '/images/ai.png' %}" alt="">
+                        <div>
+                            <h2>ChatBot</h2>
+                            <h3>Chat With an AI Chatbot.</h3>
+                        </div>
+                    </a>
+                        </li>
+                {% for conversation in conversations %}
+                {% if conversation != botConv %}
+                    <li>
+                    <a href="/chat/{{conversation.id}}">
+                            {% if user != conversation.first_user %}
+                                {% if conversation.first_user.profile.image_url != '' %}
+                                    <img src="{{ conversation.first_user.profile.image_url }}" alt="Not found">
+                                {% else %}
+                                    <img src="{% static '/images/user-light.png' %}" alt="not found">
+                                {% endif %}
+                                <!-- <img src="{% static '/images/user-light.png' %}" alt=""> -->
+                            {% else %}
+                                {% if conversation.other_user.profile.image_url != '' %}
+                                    <img src="{{ conversation.other_user.profile.image_url }}" alt="Not found">
+                                {% else %}
+                                    <img src="{% static '/images/user-light.png' %}" alt="not found">
+                                {% endif %}
+                            {% endif %}
+                        <div>
+                            {% if user != conversation.first_user %}
+                                <h2>{{conversation.first_user}}</h2>
+                            {% else %}
+                                <h2>{{conversation.other_user}}</h2>
+                            {% endif %}
+                                <h3>
+                                    <span class="orange">&#8226</span>
+                                    @{{conversation.modified_at}}
+                                </h3>
+                        </div>
+                    </a>
+                        </li>
+                    {% endif %}
+                {% empty %}
+                    <li>
+                        <div>
+                            <h2>No Messages</h2>
+                            <h3>Your Messages Will Appear Here!</h3>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+        <main style="background-image: url({% static 'images/bg-img1.jpg' %});">
+        </main>
+    </div>
+
+    {% comment %} <script src="{% static 'js/messages.js' %}"></script> {% endcomment %}
+    <script>
+        const shrink=()=>{
+            var aside=document.querySelector("aside");
+            if(aside.offsetWidth==window.innerWidth)
+            aside.style.marginLeft = '-100%';
+        }
+        const goBack=()=>{
+            var aside=document.querySelector("aside");
+            aside.style.marginLeft = '0%';
+        }
+    </script>
+
+{% endblock %}

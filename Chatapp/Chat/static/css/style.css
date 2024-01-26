@@ -1,0 +1,368 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: #abd9e9;
+  font-family: "Poppins", sans-serif;
+}
+#container {
+  width: 80vw;
+  height: 90vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #3b3e49;
+  border-radius: 5px;
+  overflow: hidden;
+}
+aside {
+  width: 30%;
+  height: 100%;
+  display: inline-block;
+  font-size: 15px;
+  vertical-align: top;
+  position: relative;
+}
+main {
+  width: 69%;
+  height: 100%;
+  display: inline-block;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+aside header {
+  padding: 14px 14px;
+  border-bottom: 1px solid #26caad;
+  height: 5rem;
+  border-right: 1px solid gray;
+}
+aside input {
+  width: 100%;
+  height: 45px;
+  padding: 0 8px 0 8px;
+  background-color: #5e616a;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  background-image: url(/images/search.svg);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 20px);
+  background-size: 15px;
+  font-size: 15px;
+}
+aside input::placeholder {
+  color: #d8d8d8;
+}
+aside ul {
+  height: calc(100% - 5rem);
+  list-style-type: none;
+  overflow-y: scroll;
+}
+aside ul::-webkit-scrollbar {
+  width: 10px;
+}
+
+aside ul::-webkit-scrollbar-thumb {
+  background: #26caad;
+  border-radius: 5px;
+}
+
+aside ul::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside ul::-webkit-scrollbar-button {
+  display: none;
+}
+aside li {
+  margin: 0 auto;
+  width: 95%;
+  padding: 5px 0;
+  border-bottom: 1px solid #26caad;
+  margin-bottom: 5px;
+}
+aside li:hover {
+  background-color: #5e616a;
+}
+aside li img {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 8px;
+}
+aside li div {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 2px;
+}
+aside li h2 {
+  font-size: 20px;
+  color: #fff;
+  font-weight: normal;
+}
+aside li h3 {
+  font-size: 16px;
+  color: #989ca6;
+  font-weight: normal;
+}
+
+.green {
+  color: #58b666;
+}
+.orange {
+  color: #ff725d;
+}
+.new-chat-wrapper {
+  position: absolute;
+  right: 10%;
+  bottom: 20px;
+  width: 50px;
+  height: 50px;
+}
+.new-chat {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  background-color: #26caad;
+  /* background-image: url(/images/plus.svg); */
+  position: fixed;
+}
+main {
+  height: 100%;
+}
+main header {
+  background-color: #3b3e49;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 5rem;
+  padding: 15px 0 15px 10px;
+}
+main header img {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  object-fit: cover;
+}
+main header h2 {
+  font-weight: 500;
+  font-size: 20px;
+}
+.back {
+  height: 50px;
+  width: 50px;
+  /* background: url(/images/back.svg); */
+  display: none;
+}
+#chat {
+  height: calc(100% - 10rem);
+  list-style-type: none;
+  overflow-y: scroll;
+  background-color: #202020;
+  background-blend-mode: exclusion;
+  border-top: 2px solid #26caad;
+  border-bottom: 2px solid #26caad;
+}
+#chat::-webkit-scrollbar {
+  width: 10px;
+}
+
+#chat::-webkit-scrollbar-thumb {
+  background: #26caad;
+  border-radius: 5px;
+}
+
+#chat::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chat::-webkit-scrollbar-button {
+  display: none;
+}
+
+#chat li {
+  padding: 5px 15px;
+}
+#chat li:hover .tBtn {
+  opacity: 1;
+}
+#chat h3 {
+  font-size: 13px;
+  font-weight: normal;
+}
+#chat h3 {
+  color: #bbb;
+}
+#chat .time {
+  margin-bottom: 3px;
+}
+#chat .message {
+  font-size: 14px;
+  padding: 8px;
+  word-break: break-word;
+  color: #fff;
+  max-width: 90%;
+  display: inline-block;
+  text-align: left;
+  border-radius: 5px;
+}
+#chat .you {
+  margin-left: 20px;
+}
+#chat .me {
+  margin-right: 20px;
+  text-align: right;
+}
+.photo img {
+  max-width: 300px;
+  width: 100%;
+  object-fit: cover;
+}
+#chat .you .message {
+  background-color: none;
+  border: 2px solid #26caad;
+  position: relative;
+  border-top-left-radius: 0px;
+}
+#chat .me .message {
+  position: relative;
+  background-color: #26caad;
+  border-top-right-radius: 0px;
+}
+.me .message::before {
+  content: "";
+  position: absolute;
+  transform: rotateZ(225deg);
+  top: -9.5px;
+  right: -8px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #26caad;
+}
+.you .message::before {
+  content: "";
+  position: absolute;
+  transform: rotateZ(135deg) scaleX(-1);
+  top: -11.2px;
+  left: -11px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #26caad;
+}
+
+main footer {
+  position: relative;
+  height: 5rem;
+  background-color: #3b3e49;
+}
+main footer input {
+  background: #212121;
+  color: #ddd;
+  resize: none;
+  border: none;
+  display: block;
+  width: 95%;
+  height: 50px;
+  border-radius: 5px;
+  padding: 15px 55px;
+  font-size: 15px;
+  margin-top: calc((5rem - 50px) / 2);
+  margin-left: 2.5%;
+  position: absolute;
+}
+main footer input::placeholder {
+  color: #ddd;
+}
+textarea::-webkit-scrollbar {
+  width: 5px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #26caad;
+  border-radius: 5px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-button {
+  display: none;
+}
+
+.image-icon {
+  position: absolute;
+  left: 35px;
+}
+main footer img {
+  height: 25px;
+  margin-top: calc((5rem - 25px) / 2);
+  cursor: pointer;
+}
+main footer button {
+  right: 40px;
+  background: none;
+  border: none;
+  position: absolute;
+}
+/* li:hover .tBtn{
+    opacity:1;
+} */
+@media screen and (max-width: 790px) {
+  #container {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    background: #3b3e49;
+    border-radius: 0px;
+    overflow: hidden;
+  }
+}
+@media screen and (max-width: 1024px) {
+  aside li h2,
+  main header h2 {
+    font-size: 16px;
+  }
+  aside li h3 {
+    font-size: 13px;
+  }
+  aside li img {
+    width: 40px;
+    height: 40px;
+  }
+}
+@media screen and (max-width: 700px) {
+  aside {
+    width: 100%;
+    transition: margin-left 0.5s;
+  }
+  main {
+    width: 100%;
+    position: absolute;
+  }
+  .new-chat-wrapper {
+    right: 10%;
+  }
+  .back {
+    display: block;
+  }
+}

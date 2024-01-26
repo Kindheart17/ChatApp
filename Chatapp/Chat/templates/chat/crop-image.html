@@ -1,0 +1,48 @@
+{% extends 'chat/base.html' %}
+
+{% load static %}
+
+{% block title %}Chat App{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link  href="{% static 'cropperjs/cropper.css' %}" rel="stylesheet">
+<script src="{% static 'cropperjs/cropper.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <input id="logged-in-user" type="hidden" value="{{user.id}}">
+    <input id="other-user" type="hidden" value="{% if activeConversation.other_user == user %}{{activeConversation.first_user.id}}{% else %}{{activeConversation.other_user.id}}{% endif %}">
+    <input id="other-user-name" type="hidden" value="{% if activeConversation.other_user == user %}{{activeConversation.first_user.username}}{% else %}{{activeConversation.other_user.username}}{% endif %}">
+    <input id="conversation-id" type="hidden" value="{{activeConversation.id}}">
+    <h3 class="server-time" style="display: none;">{{ server_timestamp|date:"Y-m-d H:i:s" }}</h3>
+
+    <div id="container" class="text-center p-8"  style="overflow-y: scroll ">
+        <!-- <button class="px-2 m-2 bg-gray-900 text-white">Back</button> -->
+        <main>
+            <a href="/chat/{{activeConversation.id}}/" style="background-color: #5e616a;" class="text-white justify-center gap-x-1.5 mb-5 rounded-md bg-white px-9 me-3 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50" id="back">Back To Chat</a>
+            <form action="" id="image-form">
+            <input type="file" id="file-input" class="hidden">
+            <label for="file-input" class="block bg-blue-500 text-white py-2 px-4 rounded cursor-pointer my-4 mt-7">
+                    Upload Image
+                </label>
+
+                <!-- Image container (hidden by default) -->
+                <div id="image-container" class="hidden">
+                    <img id="uploaded-image" src="#" alt="Uploaded Image" class="max-w-full max-h-96 mx-auto">
+                </div>
+
+                <button id="btn-crop" type="button" class="hidden px-2 py-1 my-3 rounded text-lg bg-gray-100">Crop</button>
+                
+                <div class="cropped-container">
+                    <img src="" id="output">
+                </div>
+                
+                <button class="hidden px-2 py-1 my-3 rounded text-lg bg-green-300" id="submit-btn">Send Image</button>
+                
+            </form>
+        </main>
+    </div>
+    <script src="{% static 'js/image.js' %}"></script>
+{% endblock %}
